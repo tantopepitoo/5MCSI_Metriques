@@ -2,24 +2,46 @@
 <head>
   <meta charset="UTF-8">
   <title>Commits sur GitHub</title>
+  <!-- Chargement de la bibliothèque Google Charts -->
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    // Chargement de Google Charts et exécution de la fonction drawChart au chargement de la page
+    google.charts.load('current', {'packages':['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+      // Récupération des données des commits depuis l'API GitHub
       fetch('https://api.github.com/repos/OpenRSI/5MCSI_Metriques/commits')
         .then(response => response.json())
         .then(data => {
-          var commitsList = document.getElementById('commits-list');
+          // Création d'un tableau pour stocker les données des commits
+          var commitsData = [['Date']];
+          // Ajout de chaque date de commit au tableau de données
           data.forEach(commit => {
-            var listItem = document.createElement('li');
-            listItem.textContent = commit.commit.author.date;
-            commitsList.appendChild(listItem);
+            commitsData.push([commit.commit.author.date]);
           });
+
+          // Création d'un objet DataTable avec les données des commits
+          var dataTable = google.visualization.arrayToDataTable(commitsData);
+
+          // Options du graphique
+          var options = {
+            title: 'Dates des commits sur GitHub',
+            curveType: 'function',
+            legend: { position: 'bottom' }
+          };
+
+          // Création du graphique de type linechart dans l'élément avec l'ID 'chart_div'
+          var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+          chart.draw(dataTable, options);
         })
         .catch(error => console.error('Erreur lors de la récupération des données des commits :', error));
-    });
+    }
   </script>
 </head>
 <body>
   <h1>Commits sur GitHub</h1>
-  <ul id="commits-list"></ul>
+  <!-- Div où sera affiché le graphique -->
+  <div id="chart_div" style="width: 900px; height: 500px;"></div>
 </body>
 </html>
