@@ -30,6 +30,10 @@ def mongraphique():
 @app.route("/histogramme/")
 def monhistogramme():
     return render_template("histogramme.html")
+
+@app.route("/commits/")
+def moncommits():
+    return render_template("commits.html")
   
 @app.route('/')
 def hello_world():
