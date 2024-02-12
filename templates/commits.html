@@ -1,0 +1,25 @@
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Commits sur GitHub</title>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      fetch('https://api.github.com/repos/OpenRSI/5MCSI_Metriques/commits')
+        .then(response => response.json())
+        .then(data => {
+          var commitsList = document.getElementById('commits-list');
+          data.forEach(commit => {
+            var listItem = document.createElement('li');
+            listItem.textContent = commit.commit.author.date;
+            commitsList.appendChild(listItem);
+          });
+        })
+        .catch(error => console.error('Erreur lors de la récupération des données des commits :', error));
+    });
+  </script>
+</head>
+<body>
+  <h1>Commits sur GitHub</h1>
+  <ul id="commits-list"></ul>
+</body>
+</html>
